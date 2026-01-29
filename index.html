@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Lịch Làm Nails</title>
+    <style>
+        /* CSS Giao diện Tiệm Nails */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            border-top: 5px solid #ff6b81; /* Màu hồng nails */
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff6b81;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff6b81;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #e05469;
+        }
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            margin-left: 10px;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>✨ Đặt Lịch Nails ✨</h2>
+    
+    <form name="submit-to-google-sheet">
+        <div class="form-group">
+            <label>Tên Quý Khách</label>
+            <input type="text" name="Ten_khach" placeholder="VD: Chị Lan" required>
+        </div>
+
+        <div class="form-group">
+            <label>Số Điện Thoại</label>
+            <input type="tel" name="SDT" placeholder="0909 xxx xxx" required>
+        </div>
+
+        <div class="form-group">
+            <label>Dịch Vụ Muốn Làm</label>
+            <select name="Dich_vu" required>
+                <option value="">-- Chọn dịch vụ --</option>
+                <option value="Cắt da tay/chân">Cắt da tay/chân</option>
+                <option value="Sơn Gel">Sơn Gel</option>
+                <option value="Đắp bột">Đắp bột</option>
+                <option value="Vẽ móng nghệ thuật">Vẽ móng nghệ thuật</option>
+                <option value="Combo Chăm sóc toàn diện">Combo Chăm sóc toàn diện</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Thời Gian Hẹn</label>
+            <input type="datetime-local" name="Ngay_hen" required>
+        </div>
+
+        <button type="submit">
+            Xác Nhận Đặt Lịch <span class="spinner"></span>
+        </button>
+    </form>
+</div>
+
+<script>
+    // --- CẤU HÌNH ---
+    // Dán link Web App URL của bạn vào dòng dưới đây:
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxwFDd5uiFVPNyYbd4-FvownMQjdUalmU6Ii90wLJvL5er1mSZ8ALkGXQ8wAAniQ3Z1/exec'; 
+    // ----------------
+
+    const form = document.forms['submit-to-google-sheet'];
+    const btn = form.querySelector('button');
+    const spinner = form.querySelector('.spinner');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        // Hiệu ứng loading
+        btn.disabled = true;
+        btn.innerHTML = "Đang gửi... <span class='spinner' style='display:inline-block'></span>";
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                // Thành công
+                alert("🎉 Đặt lịch thành công! Chúng tôi sẽ gọi lại sớm để xác nhận.");
+                form.reset(); // Xóa trắng form
+                btn.disabled = false;
+                btn.innerHTML = "Xác Nhận Đặt Lịch <span class='spinner'></span>";
+            })
+            .catch(error => {
+                // Thất bại
+                alert("Lỗi! Vui lòng kiểm tra kết nối mạng.");
+                console.error('Error!', error.message);
+                btn.disabled = false;
+                btn.innerHTML = "Thử lại";
+            });
+    });
+</script>
+
+</body>
+</html>
