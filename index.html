@@ -22,7 +22,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
-            border-top: 5px solid #ff6b81; /* Màu hồng nails */
+            border-top: 5px solid #ff6b81;
         }
         h2 {
             text-align: center;
@@ -68,7 +68,6 @@
         button:hover {
             background-color: #e05469;
         }
-        /* Loading Spinner */
         .spinner {
             display: none;
             margin-left: 10px;
@@ -95,7 +94,14 @@
 
         <div class="form-group">
             <label>Số Điện Thoại</label>
-            <input type="tel" name="SDT" placeholder="0909 xxx xxx" required>
+            <input 
+                type="tel" 
+                name="SDT" 
+                placeholder="0909 xxx xxx" 
+                pattern="(\+84|0)[3|5|7|8|9][0-9]{8}" 
+                title="Vui lòng nhập số điện thoại Việt Nam hợp lệ (VD: 0909123456 hoặc +84909123456)"
+                required
+            >
         </div>
 
         <div class="form-group">
@@ -121,32 +127,25 @@
 </div>
 
 <script>
-    // --- CẤU HÌNH ---
-    // Dán link Web App URL của bạn vào dòng dưới đây:
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxwFDd5uiFVPNyYbd4-FvownMQjdUalmU6Ii90wLJvL5er1mSZ8ALkGXQ8wAAniQ3Z1/exec'; 
-    // ----------------
 
     const form = document.forms['submit-to-google-sheet'];
     const btn = form.querySelector('button');
-    const spinner = form.querySelector('.spinner');
 
     form.addEventListener('submit', e => {
         e.preventDefault();
         
-        // Hiệu ứng loading
         btn.disabled = true;
         btn.innerHTML = "Đang gửi... <span class='spinner' style='display:inline-block'></span>";
 
         fetch(scriptURL, { method: 'POST', body: new FormData(form)})
             .then(response => {
-                // Thành công
                 alert("🎉 Đặt lịch thành công! Chúng tôi sẽ gọi lại sớm để xác nhận.");
-                form.reset(); // Xóa trắng form
+                form.reset();
                 btn.disabled = false;
                 btn.innerHTML = "Xác Nhận Đặt Lịch <span class='spinner'></span>";
             })
             .catch(error => {
-                // Thất bại
                 alert("Lỗi! Vui lòng kiểm tra kết nối mạng.");
                 console.error('Error!', error.message);
                 btn.disabled = false;
